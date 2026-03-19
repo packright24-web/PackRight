@@ -20,6 +20,7 @@ interface ItemDao {
     @Delete
     suspend fun deleteItem(item: ItemEntity)
 
+
     @Query("SELECT * FROM items WHERE categoryOwnerId = :categoryId")
     fun getItemsByCategory(categoryId: String): Flow<List<ItemEntity>>
 }

@@ -190,6 +190,20 @@ class Repository(
     }
 
 
+    fun getAllCategories(): Flow<List<CategoryEntity>> {
+        val userId = auth.currentUserOrNull()?.id
+            ?: throw IllegalStateException("User not logged in")
+
+        return categoryDao.getAllCategories(userId)
+    }
+
+
+
+    fun getItemsByCategory(categoryId: String): Flow<List<ItemEntity>> {
+        return itemDao.getItemsByCategory(categoryId)
+    }
+
+
 
     fun getCategoriesWithItems() =
         categoryDao.getCategoriesWithItems()

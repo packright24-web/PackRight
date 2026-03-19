@@ -23,4 +23,6 @@ interface CategoryDao {
 
     @Query("SELECT * FROM categories WHERE categoryId = :id")
     suspend fun getCategoryById(id: String): CategoryEntity?
+    @Query("SELECT * FROM categories WHERE userId = :userId")
+    fun getAllCategories(userId: String): Flow<List<CategoryEntity>>
 }

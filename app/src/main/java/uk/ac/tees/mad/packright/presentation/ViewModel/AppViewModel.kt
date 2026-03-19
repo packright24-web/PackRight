@@ -132,7 +132,20 @@ class AppViewModel(
     fun resetHomeState() {
         _homeScreenState.value = HomeScreenState()
     }
-
+    val allCategories =
+        repo.getAllCategories()
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                emptyList()
+            )
+    fun getItems(categoryId: String) =
+        repo.getItemsByCategory(categoryId)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                emptyList()
+            )
 
 
     private val _itemScreenState = mutableStateOf(ItemScreenState())
