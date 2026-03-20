@@ -40,20 +40,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import uk.ac.tees.mad.packright.domain.Supabase.Repo.AuthRepository
 import uk.ac.tees.mad.packright.model.UserData
 import uk.ac.tees.mad.packright.presentation.ViewModel.AppViewModel
-import uk.ac.tees.mad.packright.presentation.ViewModel.AuthViewModelFactory
 import uk.ac.tees.mad.packright.ui.theme.BackgroundLight
 import uk.ac.tees.mad.packright.ui.theme.PackRightTheme
 import uk.ac.tees.mad.packright.ui.theme.PrimaryBlue
 
 @Composable
 fun AuthScreen(
-    appViewModel: AppViewModel = viewModel(
-        factory = AuthViewModelFactory(AuthRepository())
-    ),
+    appViewModel: AppViewModel,
     onAuthSuccess: () -> Unit
 ) {
     var isLoginMode by remember { mutableStateOf(true) }
