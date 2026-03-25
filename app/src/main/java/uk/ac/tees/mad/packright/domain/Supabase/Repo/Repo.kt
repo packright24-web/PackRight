@@ -192,7 +192,8 @@ class Repository(
 
     fun getAllCategories(): Flow<List<CategoryEntity>> {
         val userId = auth.currentUserOrNull()?.id
-            ?: throw IllegalStateException("User not logged in")
+        
+        if (userId == null) return kotlinx.coroutines.flow.emptyFlow()
 
         return categoryDao.getAllCategories(userId)
     }

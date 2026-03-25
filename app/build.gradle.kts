@@ -80,7 +80,7 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:compose-auth")
     implementation("io.github.jan-tennert.supabase:compose-auth-ui")
     implementation("io.github.jan-tennert.supabase:storage-kt")
-    implementation("io.ktor:ktor-client-cio:2.3.12")
+    implementation("io.ktor:ktor-client-android:2.3.12")
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.coil-kt:coil-compose:2.6.0")
 }
