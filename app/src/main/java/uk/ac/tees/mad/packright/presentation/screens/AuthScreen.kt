@@ -100,7 +100,7 @@ fun AuthContent(
                 .fillMaxWidth()
                 .height(80.dp)
                 .background(
-                    color = PrimaryBlue,
+                    color = MaterialTheme.colorScheme.primary,
                     shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -152,7 +152,7 @@ fun AuthContent(
                     ) {
                         Text(
                             text = "Sign In",
-                            color = if (isLoginMode) PrimaryBlue else MaterialTheme.colorScheme.onSurface,
+                            color = if (isLoginMode) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                             fontWeight = if (isLoginMode) FontWeight.Bold else FontWeight.Normal
                         )
                     }
@@ -168,7 +168,7 @@ fun AuthContent(
                     ) {
                         Text(
                             text = "Register",
-                            color = if (!isLoginMode) PrimaryBlue else MaterialTheme.colorScheme.onSurface,
+                            color = if (!isLoginMode) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                             fontWeight = if (!isLoginMode) FontWeight.Bold else FontWeight.Normal
                         )
                     }
@@ -187,7 +187,7 @@ fun AuthContent(
                             unfocusedContainerColor = Color.Transparent,
                             focusedContainerColor = Color.Transparent,
                             unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                            focusedBorderColor = PrimaryBlue
+                            focusedBorderColor = MaterialTheme.colorScheme.primary
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -203,7 +203,7 @@ fun AuthContent(
                         unfocusedContainerColor = Color.Transparent,
                         focusedContainerColor = Color.Transparent,
                         unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                        focusedBorderColor = PrimaryBlue
+                        focusedBorderColor = MaterialTheme.colorScheme.primary
                     )
                 )
 
@@ -220,7 +220,7 @@ fun AuthContent(
                         unfocusedContainerColor = Color.Transparent,
                         focusedContainerColor = Color.Transparent,
                         unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                        focusedBorderColor = PrimaryBlue
+                        focusedBorderColor = MaterialTheme.colorScheme.primary
                     )
                 )
 
@@ -247,7 +247,7 @@ fun AuthContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(8.dp),
                     enabled = !isLoading
                 ) {
@@ -260,7 +260,8 @@ fun AuthContent(
                         Text(
                             text = if (isLoginMode) "Sign In" else "Register",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
                         )
                     }
                 }
@@ -278,7 +279,7 @@ fun AuthContent(
                     )
                     Text(
                         text = if (isLoginMode) "Sign Up" else "Sign In",
-                        color = PrimaryBlue,
+                        color = MaterialTheme.colorScheme.primary,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.clickable { onModeChange(!isLoginMode) }
