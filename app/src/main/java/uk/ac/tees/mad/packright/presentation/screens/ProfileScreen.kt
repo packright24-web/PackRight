@@ -31,10 +31,10 @@ fun ProfileScreen(
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF3b82f6))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
             )
         },
-        containerColor = Color(0xFFF3F4F6)
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -48,21 +48,21 @@ fun ProfileScreen(
             Box(
                 modifier = Modifier
                     .size(120.dp)
-                    .background(Color.White, CircleShape),
+                    .background(MaterialTheme.colorScheme.surface, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     Icons.Default.Face,
                     contentDescription = "Profile Image",
                     modifier = Modifier.size(64.dp),
-                    tint = Color.Gray
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 "Capture Profile Image",
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp
             )
             
@@ -71,9 +71,9 @@ fun ProfileScreen(
             Button(
                 onClick = onLogout,
                 modifier = Modifier.fillMaxWidth(0.8f),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3b82f6))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("Logout", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text("Logout", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.White)
             }
         }
     }
