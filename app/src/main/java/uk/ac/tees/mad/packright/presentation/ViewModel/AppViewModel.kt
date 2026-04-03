@@ -24,6 +24,41 @@ class AppViewModel(
     private val _logoutState = mutableStateOf(false)
     val logoutState = _logoutState
 
+    private val _profileState = mutableStateOf(ProfileState())
+    val profileState = _profileState
+
+    private val _profileImageUrl = mutableStateOf<String?>(null)
+    val profileImageUrl = _profileImageUrl
+
+    init {
+        fetchProfileImage()
+    }
+
+    fun fetchProfileImage() {
+        viewModelScope.launch {
+            repo.getProfileImageUrl().collect { url ->
+                _profileImageUrl.value = url
+            }
+        }
+    }
+
+    fun uploadProfileImage(byteArray: ByteArray) {
+        viewModelScope.launch {
+            repo.uploadProfileImage(byteArray).collect { result ->
+                when (result) {
+                    ResultState.Loading -> 
+                        _profileState.value = _profileState.value.copy(isLoading = true, error = null)
+                    is ResultState.Succes -> {
+                        _profileState.value = _profileState.value.copy(isLoading = false, success = true)
+                        _profileImageUrl.value = result.data
+                    }
+                    is ResultState.error -> 
+                        _profileState.value = _profileState.value.copy(isLoading = false, error = result.message)
+                }
+            }
+        }
+    }
+
     fun loginUser(userData: UserData) {
         viewModelScope.launch {
             repo.loginUser(userData).collect { result ->
@@ -32,13 +67,15 @@ class AppViewModel(
                         _loginScreenState.value =
                             _loginScreenState.value.copy(isLoading = true, error = null)
 
-                    is ResultState.Succes ->
+                    is ResultState.Succes -> {
                         _loginScreenState.value =
                             _loginScreenState.value.copy(
                                 isLoading = false,
                                 success = true,
                                 userdata = result.data
                             )
+                        fetchProfileImage()
+                    }
 
                     is ResultState.error ->
                         _loginScreenState.value =
@@ -59,13 +96,15 @@ class AppViewModel(
                         _signupScreenState.value =
                             _signupScreenState.value.copy(isLoading = true, error = null)
 
-                    is ResultState.Succes ->
+                    is ResultState.Succes -> {
                         _signupScreenState.value =
                             _signupScreenState.value.copy(
                                 isLoading = false,
                                 success = true,
                                 userdata = result.data
                             )
+                        fetchProfileImage()
+                    }
 
                     is ResultState.error ->
                         _signupScreenState.value =
@@ -81,7 +120,10 @@ class AppViewModel(
     fun logoutUser() {
         viewModelScope.launch {
             repo.signOut().collect {
-                if (it is ResultState.Succes) _logoutState.value = true
+                if (it is ResultState.Succes) {
+                    _logoutState.value = true
+                    _profileImageUrl.value = null
+                }
             }
         }
     }
@@ -89,6 +131,7 @@ class AppViewModel(
     fun resetLoginState() { _loginScreenState.value = LogInScreenState() }
     fun resetSignupState() { _signupScreenState.value = SignUpScreenState() }
     fun resetLogoutState() { _logoutState.value = false }
+    fun resetProfileState() { _profileState.value = ProfileState() }
 
 
 
@@ -237,6 +280,12 @@ data class HomeScreenState(
 )
 
 data class ItemScreenState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val success: Boolean = false
+)
+
+data class ProfileState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val success: Boolean = false

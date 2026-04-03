@@ -99,19 +99,14 @@ fun AppNav(
         }
 
         composable(Routes.PROFILE) {
-            val logoutState by viewModel.logoutState
-            
-            if (logoutState) {
-                // Once logout finishes, reset state and navigate to login
-                viewModel.resetLogoutState()
-                navController.navigate(Routes.LOGIN) {
-                    popUpTo(Routes.HOME) { inclusive = true }
-                }
-            }
-
             ProfileScreen(
+                viewModel = viewModel,
                 onBack = { navController.popBackStack() },
-                onLogout = { viewModel.logoutUser() }
+                onLogout = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
     }

@@ -3,6 +3,11 @@ package uk.ac.tees.mad.packright.domain.Supabase.Repo
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.storage.storage
+
+import io.github.jan.supabase.storage.upload
+
+import io.github.jan.supabase.storage.Bucket
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import uk.ac.tees.mad.packright.data.local.CategoryDao
@@ -21,8 +26,46 @@ class Repository(
 
     private val auth get() = SupabaseClient.client.auth
     private val postgrest get() = SupabaseClient.client
+    private val storage get() = SupabaseClient.client.storage
 
+    fun uploadProfileImage(byteArray: ByteArray): Flow<ResultState<String>> = flow {
+        emit(ResultState.Loading)
+        try {
+            val userId = auth.currentUserOrNull()?.id
+                ?: throw Exception("User not logged in")
 
+            val fileName = "profile_$userId.jpg"
+            val bucket = storage.from("profiles")
+            
+            bucket.upload(fileName, byteArray, upsert = true)
+            val url = bucket.publicUrl(fileName)
+            
+            emit(ResultState.Succes(url))
+        } catch (e: Exception) {
+            val userMsg = when {
+                e.localizedMessage?.contains("Bucket not found") == true -> 
+                    "Storage bucket 'profiles' not found. Please create it in your Supabase Dashboard."
+                e.localizedMessage?.contains("row-level security") == true ->
+                    "Permission denied! Please add a Storage Policy to your 'profiles' bucket in Supabase."
+                else -> e.message ?: "Upload failed"
+            }
+            emit(ResultState.error(userMsg))
+        }
+    }
+
+    fun getProfileImageUrl(): Flow<String?> = flow {
+        try {
+            val userId = auth.currentUserOrNull()?.id
+            if (userId != null) {
+                val fileName = "profile_$userId.jpg"
+                emit(storage.from("profiles").publicUrl(fileName))
+            } else {
+                emit(null)
+            }
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
 
     fun loginUser(userData: UserData): Flow<ResultState<String>> = flow {
         emit(ResultState.Loading)
