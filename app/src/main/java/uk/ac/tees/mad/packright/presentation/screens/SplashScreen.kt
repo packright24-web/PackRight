@@ -46,8 +46,12 @@ fun SplashScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Assuming there is a logo in drawable or use a placeholder icon
-            // Icon(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "Logo", modifier = Modifier.size(100.dp))
+            // App Logo
+            androidx.compose.foundation.Image(
+                painter = painterResource(id = R.drawable.packright_icom_bbremoved),
+                contentDescription = "PackRight Logo",
+                modifier = Modifier.size(150.dp)
+            )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "PackRight",
