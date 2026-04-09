@@ -33,16 +33,16 @@ fun AddEditItemsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Travel Essentials", color = Color.White) },
+                title = { Text("Travel Essentials", color = MaterialTheme.colorScheme.onPrimary) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onPrimary)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF3b82f6))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary)
             )
         },
-        containerColor = Color(0xFFF3F4F6)
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -60,11 +60,7 @@ fun AddEditItemsScreen(
                     onValueChange = { newItemName = it },
                     placeholder = { Text("New item...") },
                     modifier = Modifier.weight(1f),
-                    singleLine = true,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
-                    )
+                    singleLine = true
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 IconButton(
@@ -79,7 +75,7 @@ fun AddEditItemsScreen(
                     Icon(
                         Icons.Default.Add,
                         contentDescription = "Add Item",
-                        tint = Color(0xFF3b82f6)
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -93,7 +89,7 @@ fun AddEditItemsScreen(
             ) {
                 items(items, key = { it.itemId }) { item ->
                     Card(
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                     ) {
                         Row(
@@ -111,7 +107,7 @@ fun AddEditItemsScreen(
                                 text = item.itemName,
                                 modifier = Modifier.weight(1f),
                                 textDecoration = if (item.isPacked) TextDecoration.LineThrough else null,
-                                color = if (item.isPacked) Color.Gray else Color.Black
+                                color = if (item.isPacked) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
                             )
                             IconButton(onClick = { itemToDelete = item }) {
                                 Icon(Icons.Default.Delete, contentDescription = "Delete Item", tint = Color.Gray)
