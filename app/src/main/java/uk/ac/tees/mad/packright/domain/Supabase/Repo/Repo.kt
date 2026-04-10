@@ -147,6 +147,32 @@ class Repository(
         }
     }
 
+    fun deleteCategory(category: CategoryEntity): Flow<ResultState<Unit>> = flow {
+        emit(ResultState.Loading)
+        try {
+            // Local DB handles cascade via ForeignKey.CASCADE
+            categoryDao.deleteCategory(category)
+            
+            try {
+                // Manually cascade delete on remote DB items first
+                postgrest.from("items")
+                    .delete {
+                        filter { eq("categoryOwnerId", category.categoryId) }
+                    }
+                    
+                postgrest.from("categories")
+                    .delete {
+                        filter { eq("category_id", category.categoryId) }
+                    }
+            } catch (e: Exception) {
+                // Offline
+            }
+            emit(ResultState.Succes(Unit))
+        } catch (e: Exception) {
+            emit(ResultState.error(e.message ?: "Delete category failed"))
+        }
+    }
+
 
 
     fun addItem(categoryId: String, name: String): Flow<ResultState<String>> = flow {

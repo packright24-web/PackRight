@@ -67,6 +67,9 @@ fun AppNav(
                 },
                 onAddCategory = { name ->
                     viewModel.addCategory(name)
+                },
+                onDeleteCategory = { category ->
+                    viewModel.deleteCategory(category)
                 }
             )
         }

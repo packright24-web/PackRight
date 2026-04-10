@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,10 +36,12 @@ fun HomeScreen(
     categories: List<CategoryWithItems>,
     onCategoryClick: (String) -> Unit,
     onProfileClick: () -> Unit,
-    onAddCategory: (String) -> Unit
+    onAddCategory: (String) -> Unit,
+    onDeleteCategory: (CategoryEntity) -> Unit
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     var newCategoryName by remember { mutableStateOf("") }
+    var categoryToDelete by remember { mutableStateOf<CategoryEntity?>(null) }
 
     Scaffold(
         topBar = {
@@ -85,7 +88,8 @@ fun HomeScreen(
                     packedCount = packedItems,
                     totalCount = totalItems,
                     progress = progress,
-                    onClick = { onCategoryClick(categoryWithItems.category.categoryId) }
+                    onClick = { onCategoryClick(categoryWithItems.category.categoryId) },
+                    onDeleteClick = { categoryToDelete = categoryWithItems.category }
                 )
             }
         }
@@ -124,6 +128,30 @@ fun HomeScreen(
                 }
             )
         }
+
+        categoryToDelete?.let { category ->
+            AlertDialog(
+                onDismissRequest = { categoryToDelete = null },
+                title = { Text("Confirm Deletion") },
+                text = { Text("Are you sure you want to delete \"${category.categoryName}\"? This action cannot be undone.") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            onDeleteCategory(category)
+                            categoryToDelete = null
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                    ) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { categoryToDelete = null }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -133,7 +161,8 @@ fun CategoryCard(
     packedCount: Int,
     totalCount: Int,
     progress: Float,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -144,12 +173,25 @@ fun CategoryCard(
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
-            Text(
-                text = categoryName,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 18.sp,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = categoryName,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f)
+                )
+                IconButton(onClick = onDeleteClick) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = "Delete Category",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "$packedCount/$totalCount packed",
@@ -189,7 +231,8 @@ fun HomeScreenPreview() {
             categories = mockCategories,
             onCategoryClick = {},
             onProfileClick = {},
-            onAddCategory = {}
+            onAddCategory = {},
+            onDeleteCategory = {}
         )
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import uk.ac.tees.mad.packright.data.local.CategoryEntity
 import uk.ac.tees.mad.packright.data.local.ItemEntity
 import uk.ac.tees.mad.packright.domain.Supabase.Repo.Repository
 import uk.ac.tees.mad.packright.model.ResultState
@@ -178,6 +179,32 @@ class AppViewModel(
 
     fun resetHomeState() {
         _homeScreenState.value = HomeScreenState()
+    }
+
+    fun deleteCategory(category: CategoryEntity) {
+        viewModelScope.launch {
+            repo.deleteCategory(category).collect { result ->
+                when (result) {
+                    ResultState.Loading ->
+                        _homeScreenState.value =
+                            _homeScreenState.value.copy(isLoading = true, error = null)
+
+                    is ResultState.Succes ->
+                        _homeScreenState.value =
+                            _homeScreenState.value.copy(
+                                isLoading = false,
+                                successMessage = "Category deleted"
+                            )
+
+                    is ResultState.error ->
+                        _homeScreenState.value =
+                            _homeScreenState.value.copy(
+                                isLoading = false,
+                                error = result.message
+                            )
+                }
+            }
+        }
     }
     val allCategories =
         try {
