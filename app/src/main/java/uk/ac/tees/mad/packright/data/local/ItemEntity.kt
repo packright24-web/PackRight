@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
+
 @Entity(
     tableName = "items",
     foreignKeys = [
@@ -16,6 +18,7 @@ import androidx.room.PrimaryKey
     ],
     indices = [Index("categoryOwnerId")]
 )
+@Serializable
 data class ItemEntity(
 
     @PrimaryKey

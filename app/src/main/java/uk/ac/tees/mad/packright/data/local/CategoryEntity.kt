@@ -2,7 +2,10 @@ package uk.ac.tees.mad.packright.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
+
 @Entity(tableName = "categories")
+@Serializable
 data class CategoryEntity(
 
     @PrimaryKey

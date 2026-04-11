@@ -137,7 +137,7 @@ class Repository(
                 postgrest.from("categories").insert(category)
                 categoryDao.insertCategory(category.copy(isSynced = true))
             } catch (e: Exception) {
-
+                android.util.Log.e("SupabaseSync", "Error inserting category: ${e.message}", e)
             }
 
             emit(ResultState.Succes("Category created"))
@@ -165,7 +165,7 @@ class Repository(
                         filter { eq("category_id", category.categoryId) }
                     }
             } catch (e: Exception) {
-                // Offline
+                android.util.Log.e("SupabaseSync", "Error deleting category: ${e.message}", e)
             }
             emit(ResultState.Succes(Unit))
         } catch (e: Exception) {
@@ -197,7 +197,7 @@ class Repository(
                 postgrest.from("items").insert(item)
                 itemDao.insertItem(item.copy(isSynced = true))
             } catch (e: Exception) {
-                // Offline
+                android.util.Log.e("SupabaseSync", "Error inserting item: ${e.message}", e)
             }
 
             emit(ResultState.Succes("Item added"))
@@ -226,7 +226,7 @@ class Repository(
 
                 itemDao.updateItem(updated.copy(isSynced = true))
             } catch (e: Exception) {
-                // Offline
+                android.util.Log.e("SupabaseSync", "Error updating item: ${e.message}", e)
             }
 
             emit(ResultState.Succes(Unit))
@@ -248,7 +248,7 @@ class Repository(
                         filter { eq("item_id", item.itemId) }
                     }
             } catch (e: Exception) {
-                // Offline
+                android.util.Log.e("SupabaseSync", "Error deleting item: ${e.message}", e)
             }
 
             emit(ResultState.Succes(Unit))
