@@ -25,4 +25,7 @@ interface CategoryDao {
     suspend fun getCategoryById(id: String): CategoryEntity?
     @Query("SELECT * FROM categories WHERE userId = :userId")
     fun getAllCategories(userId: String): Flow<List<CategoryEntity>>
+
+    @Query("SELECT * FROM categories WHERE isSynced = 0")
+    suspend fun getUnsyncedCategories(): List<CategoryEntity>
 }

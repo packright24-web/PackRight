@@ -259,6 +259,40 @@ class Repository(
     }
 
 
+    fun syncOfflineData(): Flow<ResultState<Unit>> = flow {
+        try {
+            val userId = auth.currentUserOrNull()?.id ?: return@flow
+            
+            // Sync Categories
+            val unsyncedCategories = categoryDao.getUnsyncedCategories()
+            for (category in unsyncedCategories) {
+                try {
+                    postgrest.from("categories").insert(category)
+                    categoryDao.insertCategory(category.copy(isSynced = true))
+                } catch (e: Exception) {
+                    android.util.Log.e("SupabaseSync", "Offline sync failed for category ${category.categoryId}: ${e.message}")
+                }
+            }
+
+            // Sync Items
+            val unsyncedItems = itemDao.getUnsyncedItems()
+            for (item in unsyncedItems) {
+                try {
+                    // Item could be an insert or an update. UPSERT checks primary key.
+                    postgrest.from("items").upsert(item)
+                    itemDao.updateItem(item.copy(isSynced = true))
+                } catch (e: Exception) {
+                    android.util.Log.e("SupabaseSync", "Offline sync failed for item ${item.itemId}: ${e.message}")
+                }
+            }
+            
+            emit(ResultState.Succes(Unit))
+        } catch (e: Exception) {
+            emit(ResultState.error(e.message ?: "Sync failed"))
+        }
+    }
+
+
     fun getAllCategories(): Flow<List<CategoryEntity>> {
         val userId = auth.currentUserOrNull()?.id
         

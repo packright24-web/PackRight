@@ -23,4 +23,7 @@ interface ItemDao {
 
     @Query("SELECT * FROM items WHERE categoryOwnerId = :categoryId")
     fun getItemsByCategory(categoryId: String): Flow<List<ItemEntity>>
+
+    @Query("SELECT * FROM items WHERE isSynced = 0")
+    suspend fun getUnsyncedItems(): List<ItemEntity>
 }

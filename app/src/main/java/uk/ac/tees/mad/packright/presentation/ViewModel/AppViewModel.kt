@@ -33,6 +33,16 @@ class AppViewModel(
 
     init {
         fetchProfileImage()
+        syncData()
+    }
+
+    fun syncData() {
+        viewModelScope.launch {
+            repo.syncOfflineData().collect { result ->
+                // Optionally handle ResultState if specific UI updates are needed
+                android.util.Log.d("SupabaseSync", "syncData result: $result")
+            }
+        }
     }
 
     fun fetchProfileImage() {
